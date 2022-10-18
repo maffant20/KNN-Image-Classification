@@ -3,17 +3,21 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 
+#Most of functions used here are same as Euclidean so read the comments there for further understanding
+
 ##################Training Images Preprocessing#######################
 
+# Remember to change the Training_Images_Path and Testing_Images_Path according to your own folder i.e., in the folder where all images are stored. 
+# These are according to my computer
 
-Labels = ['Octopus','Shark']
+Labels = ['Octopus','Shark'] #Image Labels
 X_train = []
-Training_Images_Path = 'C:\\Users\\muham\\Desktop\\NUST 3rd Semester\\DL\\Training Set\\'
+Training_Images_Path = 'C:\\Users\\muham\\Desktop\\NUST 3rd Semester\\DL\\Training Set\\' #Reading Training Images from folder sequentially
 img_names = [ Training_Images_Path + str(img_number) + ".jpg"  for img_number in range(1,21)]
 for img in img_names:
     p = cv.imread(img)
     p = cv.cvtColor(p, cv.COLOR_BGR2GRAY)
-    p = cv.resize(p,(50,50), interpolation=cv.INTER_AREA)
+    p = cv.resize(p,(50,50), interpolation=cv.INTER_AREA) #Grayscaling and resizing image for ease in computation
     p = np.asarray(p)
     X_train.append(p)
 print(len(X_train))
@@ -29,7 +33,7 @@ Y_train = np.concatenate((y1,y2),axis=0) #0 is label for Octopus and 1 is label 
 ###################Testing Image Preprocessing#######################
 
 X_test =[]
-Testing_Images_Path = 'C:\\Users\\muham\\Desktop\\NUST 3rd Semester\\DL\\Testing Set\\'
+Testing_Images_Path = 'C:\\Users\\muham\\Desktop\\NUST 3rd Semester\\DL\\Testing Set\\' #Reading Testing Images from folder sequentially
 img_names2 = [ Testing_Images_Path + str(img_number) + ".jpg"  for img_number in range(1,11)]
 for img in img_names2:
 
@@ -48,7 +52,7 @@ X_test2 = np.array(X_test)
 
 ###################Distance Computation##########################
 
-def manhattan_distance(Xtr,Xtest,im):
+def manhattan_distance(Xtr,Xtest,im): #Manhattan distance between each training image and test image
     distance = np.zeros(20)
     for i in range(20):
         dist = 0
