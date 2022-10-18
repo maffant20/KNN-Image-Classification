@@ -49,7 +49,7 @@ X_test2 = np.array(X_test)
 
 ###################Distance Computation##########################
 
-def euclidean_distance(Xtr,Xtest,im): # Euclidean distance calculation
+def euclidean_distance(Xtr,Xtest,im): # Euclidean distance calculation each training image from test image 
     distance = np.zeros(20)
     for i in range(20):
         dist = 0
@@ -68,14 +68,14 @@ y3 = np.zeros(5)
 y4 = np.ones(5)
 Y_test = np.concatenate((y3,y4), axis = 0) #0 is label for Octopus and 1 is label for shark
 
-def predict(Xtr,Ytr,Xtest,Ytest,k,im_test): #Calculates distance of each training image from test image 
+def predict(Xtr,Ytr,Xtest,Ytest,k,im_test): #Calculates distance of each training image from  each test image 
     # label = []
     dist = np.zeros(20)
     dist2 = np.zeros(k)
     dist = euclidean_distance(Xtr,Xtest,im_test)
     dist = np.argsort(dist) #Sorting indices based on lowest distances
     for i in range(k):
-        dist2[i] = dist[i]
+        dist2[i] = dist[i]       # Truncating values until k index value so that we may analyze the class of all test images based on that much neighbours
     dist3 = dist2.astype(np.int)    #Converting to int for further indexing
 
     return dist3
