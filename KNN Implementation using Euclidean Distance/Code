@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 
 ##################Training Images Preprocessing#######################
 
+# Remember to change the Training_Images_Path and Testing_Images_Path according to your own folder i.e., in the folder where all images are stored. 
+# These are according to my computer
 
 Labels = ['Octopus','Shark'] # Image Labels
 X_train = [] 
@@ -26,7 +28,7 @@ y2 = np.ones(10)
 Y_train = np.concatenate((y1,y2),axis=0) #0 is label for Octopus and 1 is label for shark
 
 
-###################Testing Image Preprocessing#######################
+###################Testing Images Preprocessing#######################
 
 X_test =[]
 Testing_Images_Path = 'C:\\Users\\muham\\Desktop\\NUST 3rd Semester\\DL\\Testing Set\\'
@@ -80,10 +82,10 @@ def predict(Xtr,Ytr,Xtest,Ytest,k,im_test):
 
 
 
-k_sets= [1,3,5,7] #FOr traversing over k values 
+k_sets= [1,3,5,7] #For traversing over k values 
 accuracies = np.zeros(4) # Storing each accuracy against each K value
-predicted_labels =["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
-y_predict = np.zeros(10)
+predicted_labels =["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"] #For storing all predicted labels
+y_predict = np.zeros(10) #For storing all predicted labels in the form of integers
 m=0
 for k in k_sets:
     for i in range(10):
