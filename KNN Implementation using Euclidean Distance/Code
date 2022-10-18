@@ -15,13 +15,13 @@ img_names = [ Training_Images_Path + str(img_number) + ".jpg"  for img_number in
 for img in img_names:
     p = cv.imread(img)
     p = cv.cvtColor(p, cv.COLOR_BGR2GRAY)
-    p = cv.resize(p,(50,50), interpolation=cv.INTER_AREA) # Image Resizing
+    p = cv.resize(p,(50,50), interpolation=cv.INTER_AREA) # Image Resizing to 50*50
     p = np.asarray(p)
     X_train.append(p)
 print(len(X_train))
 for i in range(20):
     X_train[i] = X_train[i].flatten()
-X_train2 = np.array(X_train) # Storing Images as rows in an array
+X_train2 = np.array(X_train) # Storing Images as rows in an array where all pixels in an image are stored in columns
 X_train2 = X_train2[:20]
 y1 = np.zeros(10)
 y2 = np.ones(10)
@@ -68,7 +68,7 @@ y3 = np.zeros(5)
 y4 = np.ones(5)
 Y_test = np.concatenate((y3,y4), axis = 0) #0 is label for Octopus and 1 is label for shark
 
-def predict(Xtr,Ytr,Xtest,Ytest,k,im_test):
+def predict(Xtr,Ytr,Xtest,Ytest,k,im_test): #Calculates distance of each training image from test image 
     # label = []
     dist = np.zeros(20)
     dist2 = np.zeros(k)
@@ -90,8 +90,8 @@ m=0
 for k in k_sets:
     for i in range(10):
         d = predict(X_train2,Y_train,X_test2,Y_test,k,i)
-        count_zeros = 0
-        count_ones = 0
+        count_zeros = 0 #For counting 0s in the predicted labels' array
+        count_ones = 0 #For counting 1s in the predicted labels' array
         for j in d:
             if Y_train[j] == 0:
                 count_zeros = count_zeros + 1
@@ -116,13 +116,13 @@ for k in k_sets:
         if y_predict[l]==Y_test[l]:
             correct = correct + 1
     acc = (correct/Y_test.shape[0])*100        
-    accuracies[m] = acc
+    accuracies[m] = acc #accuracy calculation and storing in the array
     m=m+1
     print('accuracy = {} % for k = {}'.format(acc,k))
 plt.plot(k_sets,accuracies)
 plt.xlabel('K')
 plt.ylabel('Accuracies')
-plt.title('KNN Classifier Accuracies vs K values for Euclidean Distance')
+plt.title('KNN Classifier Accuracies vs K values for Euclidean Distance') 
 plt.show()
 
 
