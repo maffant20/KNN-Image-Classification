@@ -1,1 +1,130 @@
 
+import cv2 as cv
+import numpy as np
+import matplotlib.pyplot as plt
+
+##################Training Images Preprocessing#######################
+
+
+Labels = ['Octopus','Shark'] # Image Labels
+X_train = [] 
+Training_Images_Path = 'C:\\Users\\muham\\Desktop\\NUST 3rd Semester\\DL\\Training Set\\' #Sequential Image Reading from folder 
+img_names = [ Training_Images_Path + str(img_number) + ".jpg"  for img_number in range(1,21)]
+for img in img_names:
+    p = cv.imread(img)
+    p = cv.cvtColor(p, cv.COLOR_BGR2GRAY)
+    p = cv.resize(p,(50,50), interpolation=cv.INTER_AREA) # Image Resizing
+    p = np.asarray(p)
+    X_train.append(p)
+print(len(X_train))
+for i in range(20):
+    X_train[i] = X_train[i].flatten()
+X_train2 = np.array(X_train) # Storing Images as rows in an array
+X_train2 = X_train2[:20]
+y1 = np.zeros(10)
+y2 = np.ones(10)
+Y_train = np.concatenate((y1,y2),axis=0) #0 is label for Octopus and 1 is label for shark
+
+
+###################Testing Image Preprocessing#######################
+
+X_test =[]
+Testing_Images_Path = 'C:\\Users\\muham\\Desktop\\NUST 3rd Semester\\DL\\Testing Set\\'
+img_names2 = [ Testing_Images_Path + str(img_number) + ".jpg"  for img_number in range(1,11)] #Reading Testing Images Sequentially
+for img in img_names2:
+
+    im2 = cv.imread(img)
+    im2 = cv.cvtColor(im2,cv.COLOR_BGR2GRAY)
+    im2 = cv.resize(im2,(50,50), interpolation=cv.INTER_AREA)
+    im2 = np.asarray(im2)
+    X_test.append(im2)
+for i in range(10):
+    X_test[i] = X_test[i].flatten()
+
+X_test2 = np.array(X_test)
+
+
+
+###################Distance Computation##########################
+
+def euclidean_distance(Xtr,Xtest,im): # Euclidean distance calculation
+    distance = np.zeros(20)
+    for i in range(20):
+        dist = 0
+        for j in range(Xtr.shape[1]):
+           dist = dist +  np.sum((Xtest[im][j]-Xtr[i][j])**2)
+        distance[i] = np.sqrt(dist)
+    return distance
+print(type(X_train2))
+
+
+    
+
+
+####################Prediction##################################
+y3 = np.zeros(5)
+y4 = np.ones(5)
+Y_test = np.concatenate((y3,y4), axis = 0) #0 is label for Octopus and 1 is label for shark
+
+def predict(Xtr,Ytr,Xtest,Ytest,k,im_test):
+    # label = []
+    dist = np.zeros(20)
+    dist2 = np.zeros(k)
+    dist = euclidean_distance(Xtr,Xtest,im_test)
+    dist = np.argsort(dist) #Sorting indices based on lowest distances
+    for i in range(k):
+        dist2[i] = dist[i]
+    dist3 = dist2.astype(np.int)    #Converting to int for further indexing
+
+    return dist3
+
+
+
+k_sets= [1,3,5,7] #FOr traversing over k values 
+accuracies = np.zeros(4) # Storing each accuracy against each K value
+predicted_labels =["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
+y_predict = np.zeros(10)
+m=0
+for k in k_sets:
+    for i in range(10):
+        d = predict(X_train2,Y_train,X_test2,Y_test,k,i)
+        count_zeros = 0
+        count_ones = 0
+        for j in d:
+            if Y_train[j] == 0:
+                count_zeros = count_zeros + 1
+        
+            elif Y_train[j]== 1:
+                count_ones = count_ones + 1
+
+        if count_zeros > count_ones:
+            print('Image is of {}'.format(Labels[0]))
+            predicted_labels[i] = "Octopus"
+            y_predict[i] = 0
+        elif count_zeros < count_ones:    
+            print('Image is of {}'.format(Labels[1]))
+            predicted_labels[i] = "Shark"
+            y_predict[i] = 1
+    print(predicted_labels)
+    print(y_predict)
+    ################Accuracy Calculation##############################
+    correct = 0
+    for l in range(10):
+
+        if y_predict[l]==Y_test[l]:
+            correct = correct + 1
+    acc = (correct/Y_test.shape[0])*100        
+    accuracies[m] = acc
+    m=m+1
+    print('accuracy = {} % for k = {}'.format(acc,k))
+plt.plot(k_sets,accuracies)
+plt.xlabel('K')
+plt.ylabel('Accuracies')
+plt.title('KNN Classifier Accuracies vs K values for Euclidean Distance')
+plt.show()
+
+
+
+
+
+
